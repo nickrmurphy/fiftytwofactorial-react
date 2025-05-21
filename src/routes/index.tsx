@@ -2,6 +2,7 @@ import { db, schema } from "../db";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Counter } from "../components/Counter";
+import { useState } from "react";
 
 const getCount = createServerFn({ method: "GET" }).handler(async () => {
 	const [result] = await db.select().from(schema.countTable).execute();
@@ -23,14 +24,14 @@ const incrementCount = createServerFn({ method: "POST" })
 		return result.value;
 	});
 
-// const subscribeEmail = createServerFn({ method: "POST" })
-// 	.validator((email: string) => email)
-// 	.handler(async ({ data }) => {
-// 		await db
-// 			.insert(schema.subscriptionsTable)
-// 			.values({ email: data })
-// 			.execute();
-// 	});
+const subscribeEmail = createServerFn({ method: "POST" })
+	.validator((email: string) => email)
+	.handler(async ({ data }) => {
+		await db
+			.insert(schema.subscriptionsTable)
+			.values({ email: data })
+			.execute();
+	});
 
 export const Route = createFileRoute("/")({
 	component: Home,
@@ -40,9 +41,19 @@ export const Route = createFileRoute("/")({
 function Home() {
 	const router = useRouter();
 	const count = Route.useLoaderData();
+	const [email, setEmail] = useState("");
+	const [subscribed, setSubscribed] = useState(false);
 
 	const handleIncrement = async () => {
 		await incrementCount({ data: 1 }).then((res) => router.invalidate());
+	};
+
+	const handleEmailSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		await subscribeEmail({ data: email }).then(() => {
+			setEmail("");
+			setSubscribed(true);
+		});
 	};
 
 	return (
@@ -79,24 +90,33 @@ function Home() {
 					<Counter count={count} onIncrement={handleIncrement} />
 				</div>
 			</div>
-			{/* <div className="rounded-lg px-4 py-6 bg-slate-800 flex flex-col gap-5">
+			<div className="rounded-lg px-4 py-6 bg-slate-800 flex flex-col gap-5">
 				<p className="text-xl">Find out when the percentage changes</p>
-				<form className="*:data-[slot=input]:rounded-r-none flex *:data-[slot=button]:rounded-l-none *:data-[slot=button]:border-l-0">
-					<input
-						data-slot="input"
-						type="email"
-						className="rounded-md border border-slate-600 px-2 py-1 w-full"
-						placeholder="Enter your email..."
-					/>
-					<button
-						data-slot="button"
-						className="rounded-md border border-slate-600 p-2"
-						type="button"
+				{subscribed ? (
+					<p className="text-slate-300">We'll keep you posted!</p>
+				) : (
+					<form
+						className="*:data-[slot=input]:rounded-r-none flex *:data-[slot=button]:rounded-l-none *:data-[slot=button]:border-l-0"
+						onSubmit={handleEmailSubmit}
 					>
-						Subscribe
-					</button>
-				</form>
-			</div> */}
+						<input
+							data-slot="input"
+							type="email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							className="rounded-md border border-slate-600 px-2 py-1 w-full"
+							placeholder="Enter your email..."
+						/>
+						<button
+							data-slot="button"
+							className="rounded-md border border-slate-600 p-2"
+							type="submit"
+						>
+							Subscribe
+						</button>
+					</form>
+				)}
+			</div>
 		</main>
 	);
 }
