@@ -15,8 +15,10 @@
 		"@tanstack/react-start": "^1.120.5",
 		"@types/bun": "^1.2.13",
 		"drizzle-orm": "^0.43.1",
+		"nitro-cloudflare-dev": "^0.2.2",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
+		"unenv": "^1.10.0",
 		"vinxi": "0.5.3"
 	},
 	"devDependencies": {
