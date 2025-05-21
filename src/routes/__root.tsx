@@ -20,7 +20,7 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "Fifty-two Factorial",
 			},
 		],
 		links: [
@@ -32,7 +32,6 @@ export const Route = createRootRoute({
 			{
 				rel: "preconnect",
 				href: "https://fonts.gstatic.com",
-				crossOrigin: "anonymous",
 			},
 			{
 				rel: "stylesheet",
