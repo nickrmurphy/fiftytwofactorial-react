@@ -1,7 +1,6 @@
 // app.config.ts
 import { defineConfig } from "@tanstack/react-start/config";
 import tailwindcss from "@tailwindcss/vite";
-import { cloudflare } from "unenv";
 
 export default defineConfig({
 	tsr: {
@@ -11,7 +10,6 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 	server: {
-		preset: "cloudflare-pages",
-		unenv: cloudflare,
+		preset: "netlify",
 	},
 });
