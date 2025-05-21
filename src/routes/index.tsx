@@ -4,38 +4,38 @@ import { createServerFn } from "@tanstack/react-start";
 import { Counter } from "../components/Counter";
 import { useState } from "react";
 
-const getCount = createServerFn({ method: "GET" }).handler(async () => {
-	const [result] = await db.select().from(schema.countTable).execute();
-	return result.value;
-});
+// const getCount = createServerFn({ method: "GET" }).handler(async () => {
+// 	const [result] = await db.select().from(schema.countTable).execute();
+// 	return result.value;
+// });
 
-const incrementCount = createServerFn({ method: "POST" })
-	.validator((addBy: number) => addBy)
-	.handler(async ({ data }) => {
-		const [result] = await db.transaction(async (tx) => {
-			const [current] = await tx.select().from(schema.countTable).execute();
-			return await tx
-				.update(schema.countTable)
-				.set({ value: current.value + data })
-				.returning()
-				.execute();
-		});
+// const incrementCount = createServerFn({ method: "POST" })
+// 	.validator((addBy: number) => addBy)
+// 	.handler(async ({ data }) => {
+// 		const [result] = await db.transaction(async (tx) => {
+// 			const [current] = await tx.select().from(schema.countTable).execute();
+// 			return await tx
+// 				.update(schema.countTable)
+// 				.set({ value: current.value + data })
+// 				.returning()
+// 				.execute();
+// 		});
 
-		return result.value;
-	});
+// 		return result.value;
+// 	});
 
-const subscribeEmail = createServerFn({ method: "POST" })
-	.validator((email: string) => email)
-	.handler(async ({ data }) => {
-		await db
-			.insert(schema.subscriptionsTable)
-			.values({ email: data })
-			.execute();
-	});
+// const subscribeEmail = createServerFn({ method: "POST" })
+// 	.validator((email: string) => email)
+// 	.handler(async ({ data }) => {
+// 		await db
+// 			.insert(schema.subscriptionsTable)
+// 			.values({ email: data })
+// 			.execute();
+// 	});
 
 export const Route = createFileRoute("/")({
 	component: Home,
-	loader: async () => await getCount(),
+	loader: async () => 0,
 });
 
 function Home() {
@@ -44,17 +44,17 @@ function Home() {
 	const [email, setEmail] = useState("");
 	const [subscribed, setSubscribed] = useState(false);
 
-	const handleIncrement = async () => {
-		await incrementCount({ data: 1 }).then((res) => router.invalidate());
-	};
+	// const handleIncrement = async () => {
+	// 	await incrementCount({ data: 1 }).then((res) => router.invalidate());
+	// };
 
-	const handleEmailSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		await subscribeEmail({ data: email }).then(() => {
-			setEmail("");
-			setSubscribed(true);
-		});
-	};
+	// const handleEmailSubmit = async (e: React.FormEvent) => {
+	// 	e.preventDefault();
+	// 	await subscribeEmail({ data: email }).then(() => {
+	// 		setEmail("");
+	// 		setSubscribed(true);
+	// 	});
+	// };
 
 	return (
 		<main className="text-center mx-auto p-4 space-y-10 max-w-xl mb-20">
@@ -86,11 +86,11 @@ function Home() {
 					52 factorial.
 				</p>
 				<p>Go ahead and try!</p>
-				<div className="flex flex-col justify-center items-center gap-3">
+				{/* <div className="flex flex-col justify-center items-center gap-3">
 					<Counter count={count} onIncrement={handleIncrement} />
-				</div>
+				</div> */}
 			</div>
-			<div className="rounded-lg px-4 py-6 bg-slate-800 flex flex-col gap-5">
+			{/* <div className="rounded-lg px-4 py-6 bg-slate-800 flex flex-col gap-5">
 				<p className="text-xl">Find out when the percentage changes</p>
 				{subscribed ? (
 					<p className="text-slate-300">We'll keep you posted!</p>
@@ -116,7 +116,7 @@ function Home() {
 						</button>
 					</form>
 				)}
-			</div>
+			</div> */}
 		</main>
 	);
 }
