@@ -2,7 +2,8 @@ import { db, schema } from "../db";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Counter } from "../components/Counter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSetValueCallback } from "../components/StoreProvider";
 
 const getCount = createServerFn({ method: "GET" }).handler(async () => {
 	const [result] = await db.select().from(schema.countTable).execute();
@@ -44,8 +45,17 @@ function Home() {
 	const [email, setEmail] = useState("");
 	const [subscribed, setSubscribed] = useState(false);
 
+	const setConfirmedCount = useSetValueCallback(
+		"confirmed",
+		(value: number) => value,
+	);
+
+	useEffect(() => {
+		setConfirmedCount(count);
+	}, [count, setConfirmedCount]);
+
 	const handleIncrement = async () => {
-		await incrementCount({ data: 1 }).then((res) => router.invalidate());
+		await incrementCount({ data: 1 }).then(() => router.invalidate());
 	};
 
 	const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -87,7 +97,7 @@ function Home() {
 				</p>
 				<p>Don't believe it? Go ahead and try!</p>
 				<div className="flex flex-col justify-center items-center gap-3">
-					<Counter count={count} onIncrement={handleIncrement} />
+					<Counter />
 				</div>
 			</div>
 			<div className="rounded-lg px-4 py-6 bg-slate-800 flex flex-col gap-5">
