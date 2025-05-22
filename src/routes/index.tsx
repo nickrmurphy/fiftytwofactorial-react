@@ -79,13 +79,13 @@ function Home() {
 			</div>
 			<div className="space-y-4">
 				<p>
-					Imagine the roman colluseum full of people, and each person holds a
-					button. When pressed, the button will increment a shared counter.
-					That's about 60,000 people. If each person presses their button once
-					per second, it will take 426,275,659 × 10 <sup>55</sup> years to reach
-					52 factorial.
+					Imagine the Roman Colosseum packed with 60,000 people. Each person has
+					a button. Every time they press it, a massive shared counter ticks up
+					by one. If everyone presses their button once per second—nonstop—it
+					would still take 426,275,659 × 10<sup>55</sup> years to count all the
+					way to 52 factorial.
 				</p>
-				<p>Go ahead and try!</p>
+				<p>Don't believe it? Go ahead and try!</p>
 				<div className="flex flex-col justify-center items-center gap-3">
 					<Counter count={count} onIncrement={handleIncrement} />
 				</div>
