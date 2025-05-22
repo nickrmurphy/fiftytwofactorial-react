@@ -1,38 +1,8 @@
-import { db, schema } from "../db";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { Counter } from "../components/Counter";
 import { useEffect, useState } from "react";
 import { useSetValueCallback } from "../components/StoreProvider";
-
-const getCount = createServerFn({ method: "GET" }).handler(async () => {
-	const [result] = await db.select().from(schema.countTable).execute();
-	return result.value;
-});
-
-const incrementCount = createServerFn({ method: "POST" })
-	.validator((addBy: number) => addBy)
-	.handler(async ({ data }) => {
-		const [result] = await db.transaction(async (tx) => {
-			const [current] = await tx.select().from(schema.countTable).execute();
-			return await tx
-				.update(schema.countTable)
-				.set({ value: current.value + data })
-				.returning()
-				.execute();
-		});
-
-		return result.value;
-	});
-
-const subscribeEmail = createServerFn({ method: "POST" })
-	.validator((email: string) => email)
-	.handler(async ({ data }) => {
-		await db
-			.insert(schema.subscriptionsTable)
-			.values({ email: data })
-			.execute();
-	});
+import { getCount, subscribeEmail } from "../actions";
 
 export const Route = createFileRoute("/")({
 	component: Home,
@@ -40,7 +10,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-	const router = useRouter();
 	const count = Route.useLoaderData();
 	const [email, setEmail] = useState("");
 	const [subscribed, setSubscribed] = useState(false);
@@ -53,10 +22,6 @@ function Home() {
 	useEffect(() => {
 		setConfirmedCount(count);
 	}, [count, setConfirmedCount]);
-
-	const handleIncrement = async () => {
-		await incrementCount({ data: 1 }).then(() => router.invalidate());
-	};
 
 	const handleEmailSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();

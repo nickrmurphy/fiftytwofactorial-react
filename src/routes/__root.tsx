@@ -9,6 +9,7 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import appCss from "../app.css?url";
 import { StoreProvider } from "../components/StoreProvider";
+import { Syncronizer } from "../components/Syncronizer";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -50,6 +51,7 @@ function RootComponent() {
 			<StoreProvider>
 				<Outlet />
 				<TanStackRouterDevtools />
+				<Syncronizer />
 			</StoreProvider>
 		</RootDocument>
 	);

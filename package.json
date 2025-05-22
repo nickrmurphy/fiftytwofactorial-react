@@ -17,6 +17,7 @@
 		"drizzle-orm": "^0.43.1",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
+		"tinytick": "^1.2.8",
 		"vinxi": "0.5.3"
 	},
 	"devDependencies": {
